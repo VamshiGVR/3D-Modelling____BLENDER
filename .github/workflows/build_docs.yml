@@ -1,0 +1,29 @@
+#This workflow will build and deploy project documentation
+
+name: Build Documentation
+
+on:
+  push:
+    branches:
+      - main
+    
+permissions: 
+    contents: write
+    # pages: write
+    # id-token: write
+
+jobs:
+    build_mkdocs:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout CODE
+              uses: actions/checkout@v4
+              with:
+                fetch-depth: 0
+            - uses: actions/setup-python@v5
+              with:
+                python-version: "3.10"
+            - run: pip install \
+                    markdown-include mkdocs-materail mkdocs mkdocs-section-index mkdocs-techdocs-core mkdocstrings mkdocstrings-python
+            - run: mkdocs build
+            - run: mkdocs gh-deploy
